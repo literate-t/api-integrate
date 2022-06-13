@@ -1,27 +1,17 @@
-import React from "react";
-import axios from "axios";
-import { useAsync } from "react-async";
-
-const getUser = async ({ id }) => {
-  const res = await axios.get(
-    `https://jsonplaceholder.typicode.com/users/${id}`
-  );
-  //console.log(res.data);
-  return res.data;
-};
+import React, { useEffect } from "react";
+import { getUser, useUsersDispatch, useUsersState } from "./UsersContext";
 
 function User({ id }) {
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useAsync({
-    promiseFn: getUser,
-    id,
-    watch: id,
-  });
-  console.log(user);
-  if (isLoading) return <div>loading...</div>;
+  const state = useUsersState();
+  const dispatch = useUsersDispatch();
+
+  useEffect(() => {
+    getUser(dispatch, id);
+  }, [dispatch, id]);
+
+  const { loading, data: user, error } = state.user;
+
+  if (loading) return <div>loading...</div>;
   if (error) return <div>error</div>;
   if (!user) return null;
   return (
