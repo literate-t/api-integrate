@@ -1,27 +1,70 @@
 import React, { createContext, useContext, useReducer } from "react";
 import * as api from "./api";
-import {
-  createAsyncDispatcher,
-  createAsyncHandler,
-  initialAsyncState,
-} from "./asyncActionUtils";
+import { createAsyncDispatcher } from "./asyncActionUtils";
 
 const initialState = {
-  users: initialAsyncState,
-  user: initialAsyncState,
+  users: {
+    loading: false,
+    data: null,
+    error: null,
+  },
+  user: {
+    loading: false,
+    data: null,
+    error: null,
+  },
 };
-const usersHandler = createAsyncHandler("GET_USERS", "users");
-const userHandler = createAsyncHandler("GET_USER", "user");
+
+const loadingState = {
+  loading: true,
+  data: null,
+  error: null,
+};
+
+const success = (data) => ({
+  loading: false,
+  data,
+  error: null,
+});
+
+const error = (e) => ({
+  loading: false,
+  data: null,
+  error: e,
+});
+
 const usersReducer = (state, action) => {
   switch (action.type) {
     case "GET_USERS":
+      return {
+        ...state,
+        users: loadingState,
+      };
     case "GET_USERS_SUCCESS":
+      return {
+        ...state,
+        users: success(action.data),
+      };
     case "GET_USERS_ERROR":
-      return usersHandler(state, action);
+      return {
+        ...state,
+        users: error(action.error),
+      };
     case "GET_USER":
+      return {
+        ...state,
+        user: loadingState,
+      };
     case "GET_USER_SUCCESS":
+      return {
+        ...state,
+        user: success(action.data),
+      };
     case "GET_USER_ERROR":
-      return userHandler(state, action);
+      return {
+        ...state,
+        user: error(action.error),
+      };
     default:
       throw new Error(`Unhandled action type ${action.type}`);
   }
