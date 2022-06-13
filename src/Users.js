@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import User from "./User(custom useAsync)";
+import User from "./User";
 import { getUsers, useUsersDispatch, useUsersState } from "./UsersContext";
 
 export const Users = () => {

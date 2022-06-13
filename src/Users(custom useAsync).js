@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useAsync } from "./useAsync";
-import User from "./User(custom useAsync)";
+import User from "./User";
 
 const getUsers = async () => {
   const response = await axios.get(
